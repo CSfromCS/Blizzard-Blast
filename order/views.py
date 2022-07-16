@@ -9,13 +9,21 @@ def index(request):
     return HttpResponse("Hello Blizzarder! You are in order.")
 
 def orderslip(request):
-    NewOrderSlip = OrderSlip(customer_name="Anne")
     context = {
         'Recipe' : Recipe.objects.all(),
         'Ingredient' : Ingredient.objects.all(),
-        'NewOrderSlip' : NewOrderSlip,
         'OrderSlip' : OrderSlip.objects.all(),
         'OrderItem' : OrderItem.objects.all(),
         'ItemAddOn' : ItemAddOn.objects.all()
     }
     return render(request, 'orderslip.html', context=context)
+
+def data(request):
+    context = {
+        'Recipe' : Recipe.objects.all(),
+        'Ingredient' : Ingredient.objects.all(),
+        'OrderSlip' : OrderSlip.objects.all(),
+        'OrderItem' : OrderItem.objects.all(),
+        'ItemAddOn' : ItemAddOn.objects.all()
+    }
+    return render(request, 'data.html', context=context)
