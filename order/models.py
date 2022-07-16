@@ -20,8 +20,8 @@ class Recipe(models.Model):
 
 class OrderItem(models.Model):
     order_item_id = models.AutoField(primary_key=True, editable=False)
-    order_id = models.ForeignKey(OrderSlip, on_delete=models.CASCADE, db_column='order_id')
-    recipe_id = models.ForeignKey(Recipe, on_delete=models.RESTRICT, db_column='recipe_id')
+    order = models.ForeignKey(OrderSlip, on_delete=models.CASCADE, db_column='order_id')
+    recipe = models.ForeignKey(Recipe, on_delete=models.RESTRICT, db_column='recipe_id')
     item_price = 2
 
     def __str__(self):
@@ -39,8 +39,8 @@ class Ingredient(models.Model):
 
 class ItemAddOn(models.Model):
     item_addon_id = models.AutoField(primary_key=True, editable=False)
-    order_item_id = models.ForeignKey(OrderItem, on_delete=models.CASCADE, db_column='order_item_id')
-    ingredient_id = models.ForeignKey(Ingredient, on_delete=models.RESTRICT, db_column='ingredient_id')
+    order_item = models.ForeignKey(OrderItem, on_delete=models.CASCADE, db_column='order_item_id')
+    ingredient = models.ForeignKey(Ingredient, on_delete=models.RESTRICT, db_column='ingredient_id')
     add_on_quantity = models.IntegerField()
 
     def __str__(self):

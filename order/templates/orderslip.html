@@ -5,57 +5,44 @@
   <p>Welcome to Blizzard Blast!, an internal database system developed by <em>Franco <3</em>!</p>
   <h2>Dynamic content</h2>
 
-
-  
-
-
-
-
-  <h3>Recipes</h3>
-  <ul>
-    {% for r in Recipe %}
-    <li><b>{{r.recipe_name}} ({{r.serving_size}}oz)</b><br>
-        {{r.recipe_id}}<br>
-        <i>{{r.price}}</i>
-    </li>
-    {% endfor %}
-  </ul>
-
-  <h3>Ingredients</h3>
-  <ul>
-    {% for i in Ingredient %}
-    <li><b>{{i.ingredient_name}} ({{i.category}})</b><br>
-        Stock: {{i.stock_quantity}}<br>
-        Price per serving: <i>{{i.price_serving}}</i><br>
-        ID: {{i.ingredient_id}}
-    </li>
-    {% endfor %}
-  </ul>
-  
   <h3>Order Slips</h3>
-  <ul>
-    {% for os in OrderSlip %}
-    <li><b>{{os.customer_name}} ({{os.date_ordered}})</b><br>
-        Order ID: {{os.order_id}}
 
-        {% for oi in OrderItem %}
-            {% if oi.order_id == os.order_id %}
-                <br>
-                <b>{{oi.recipe_id}}</b> [{{oi.order_item_id}}]
+    <select id="orderSearch" onchange="location.href=document.getElementById('orderSearch').value">
+        <option value="">---</option>
+        {% for os in OrderSlip %}
+            {% if os == LastOrderSlip %}
+            <option value="{{os.order_id}}" selected>{{os}}</option>
+            {% else %}
+            <option value="{{os.order_id}}">{{os}}</option>
+            {% endif %}
+        {% endfor %}
+    </select>
 
+    <button type="button" onclick="location.href=document.getElementById('orderSearch').value">Search Order</button>
+
+    <br><br>
+    <b>{{LastOrderSlip.customer_name}} ({{LastOrderSlip.date_ordered}})</b><br>
+        Order ID: {{LastOrderSlip.order_id}}
+        <ol>
+            {% for oi in OrderItem %}
+            {% if oi.order == LastOrderSlip %}
+            <li><b>{{oi.recipe.recipe_name}} ({{oi.recipe.serving_size}}oz)</b> [{{oi.order_item_id}}]
+                <button type="button" onclick="location.href='../item/new/{{LastOrderSlip.order_id}}'"> Add Add-On</button>
                 {% for ia in ItemAddOn %}
-                    {% if ia.order_item_id == oi.order_item_id %}
-                    <br>
-                    <i>{{ia.ingredient_id}}: {{ia.add_on_quantity}}</i>
-                    {% endif %}
-
+                {% if ia.order_item == oi %}
+                    <br><i>{{ia.ingredient.ingredient_name}}: ₱{{ia.ingredient.price_serving}} x {{ia.add_on_quantity}} = ₱{% widthratio ia.ingredient.price_serving 1 ia.add_on_quantity %}</i>
+                {% endif %}
                 {% endfor %}
 
+            </li>
             {% endif %}
+            {% endfor %}
+        </ol>
+        
+        <button type="button" onclick="location.href='../item/new/{{LastOrderSlip.order_id}}'"> Add Item</button>
+        <br><br><br>
+        <button type="button" onclick="location.href='../delete/{{LastOrderSlip.order_id}}'">Delete Order Slip</button>
+        <br><br><br>
+        <button type="button" onclick="location.href='new/'">New Order Slip</button>
 
-        {% endfor %}
-
-    </li>
-    {% endfor %}
-  </ul>
 {% endblock %}
