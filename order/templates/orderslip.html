@@ -1,0 +1,55 @@
+{% extends "base_template.html" %}
+
+{% block content %}
+  <h1>Order Slip</h1>
+  <p>Welcome to Blizzard Blast!, an internal database system developed by <em>Franco <3</em>!</p>
+  <h2>Dynamic content</h2>
+
+  <h3>Recipes</h3>
+  <ul>
+    {% for r in Recipe %}
+    <li><b>{{r.recipe_name}} ({{r.serving_size}}oz)</b><br>
+        {{r.recipe_id}}<br>
+        <i>{{r.price}}</i>
+    </li>
+    {% endfor %}
+  </ul>
+
+  <h3>Ingredients</h3>
+  <ul>
+    {% for i in Ingredient %}
+    <li><b>{{i.ingredient_name}} ({{i.category}})</b><br>
+        Stock: {{i.stock_quantity}}<br>
+        Price per serving: <i>{{i.price_serving}}</i><br>
+        ID: {{i.ingredient_id}}
+    </li>
+    {% endfor %}
+  </ul>
+  
+  <h3>Order Slips</h3>
+  <ul>
+    {% for os in OrderSlip %}
+    <li><b>{{os.customer_name}} ({{os.date_ordered}})</b><br>
+        Order ID:{{os.order_id}}
+
+        {% for oi in OrderItem %}
+            {% if oi.order_id == os.order_id %}
+                <br>
+                <b>{{oi.recipe_id}}</b> [{{oi.order_item_id}}]
+
+                {% for ia in ItemAddOn %}
+                    {% if ia.order_item_id == oi.order_item_id %}
+                    <br>
+                    <i>{{ia.ingredient_id}}: {{ia.add_on_quantity}}</i>
+                    {% endif %}
+
+                {% endfor %}
+
+            {% endif %}
+
+        {% endfor %}
+
+    </li>
+    {% endfor %}
+  </ul>
+{% endblock %}
