@@ -7,6 +7,7 @@
 
   <h3>Order Slips</h3>
 
+    <!-- Order Slip Select Box -->
     <select id="orderSearch" onchange="location.href=document.getElementById('orderSearch').value">
         <option value="">---</option>
         {% for os in OrderSlip %}
@@ -19,30 +20,36 @@
     </select>
 
     <button type="button" onclick="location.href=document.getElementById('orderSearch').value">Search Order</button>
+    <button type="button" onclick="location.href='new/'">New Order Slip</button>
 
     <br><br>
-    <b>{{LastOrderSlip.customer_name}} ({{LastOrderSlip.date_ordered}})</b><br>
+
+    <!-- Order Slip Details -->
+    <b>{{LastOrderSlip.customer_name}} ({{LastOrderSlip.date_ordered}})</b> | ₱ {{LastOrderSlip.order_price}}<br>
         Order ID: {{LastOrderSlip.order_id}}
+        <button type="button" onclick="location.href='../slip/delete/{{LastOrderSlip.order_id}}'">Delete Order Slip</button>
+        
         <ol>
+            <!-- Each Order Item in the Order Slip-->
             {% for oi in OrderItem %}
             {% if oi.order == LastOrderSlip %}
-            <li><b>{{oi.recipe.recipe_name}} ({{oi.recipe.serving_size}}oz)</b> [{{oi.order_item_id}}]
-                <button type="button" onclick="location.href='../item/new/{{LastOrderSlip.order_id}}'"> Add Add-On</button>
+            <li><b>{{oi.recipe.recipe_name}} ({{oi.recipe.serving_size}}oz)</b> | ₱{{oi.item_price}}
+            <button type="button" onclick="location.href='../item/delete/{{oi.order_item_id}}'">Delete Item</button>
+                
+                <!-- Each Item Add-On in the Order Item-->
                 {% for ia in ItemAddOn %}
                 {% if ia.order_item == oi %}
-                    <br><i>{{ia.ingredient.ingredient_name}}: ₱{{ia.ingredient.price_serving}} x {{ia.add_on_quantity}} = ₱{% widthratio ia.ingredient.price_serving 1 ia.add_on_quantity %}</i>
+                <br><i>{{ia.ingredient.ingredient_name}}: ₱{{ia.ingredient.price_serving}} x {{ia.add_on_quantity}} = ₱{% widthratio ia.ingredient.price_serving 1 ia.add_on_quantity %}</i>
+                <button type="button" onclick="location.href='../item/addon/delete/{{ia.item_addon_id}}'">Delete Add-On</button>
                 {% endif %}
                 {% endfor %}
 
+            <br>
+            <button type="button" onclick="location.href='../item/addon/new/{{oi.order_item_id}}'"> Add Add-On</button>
             </li>
             {% endif %}
             {% endfor %}
         </ol>
         
-        <button type="button" onclick="location.href='../item/new/{{LastOrderSlip.order_id}}'"> Add Item</button>
-        <br><br><br>
-        <button type="button" onclick="location.href='../delete/{{LastOrderSlip.order_id}}'">Delete Order Slip</button>
-        <br><br><br>
-        <button type="button" onclick="location.href='new/'">New Order Slip</button>
-
+    <button type="button" onclick="location.href='../item/new/{{LastOrderSlip.order_id}}'"> Add Item</button>
 {% endblock %}

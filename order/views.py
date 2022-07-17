@@ -11,7 +11,6 @@ def index(request):
     return HttpResponse("Hello Blizzarder! You are in order.")
 
 def orderslip(request, order=OrderSlip.objects.latest('order_id').order_id):
-    print(order)
     context = {
         'LastOrderSlip' : OrderSlip.objects.filter(order_id=order).first(),
         'OrderItem' : OrderItem.objects.filter(order=order),
@@ -48,13 +47,16 @@ def neworderitem(request, order):
 
 def newitemaddon(request, order_item):
     if request.method == 'POST':
-        form = OrderItemForm(request.POST)
+        form = ItemAddOnForm(request.POST)
         if form.is_valid():
             print("VALID!")
-            form.save()
-            return redirect('orderslip')
+            if(form.cleaned_data['add_on_quantity'] != 0):
+                print("No quantity. Not saved.")
+                newItemAddOn = form.save()
+                return redirect('orderslip', order=newItemAddOn.order_item.order_id)
+            return redirect('orderslip', order=form.cleaned_data['order_item'].order_id)
 
-    form = OrderItemForm({'order_item':order_item})
+    form = ItemAddOnForm({'order_item':order_item})
     return render(request, 'form.html', {'form' : form})
 
 def data(request):
@@ -68,6 +70,29 @@ def data(request):
     return render(request, 'data.html', context=context)
 
 def deleteOrderSlip(request, order_id):
-    OrderSlip.objects.filter(order_id=order_id).delete()
+    try:
+        OrderSlip.objects.filter(order_id=order_id).delete()
+    except:
+        print("No Order Slip found.")
     LastOrderSlip = OrderSlip.objects.latest('order_id')
     return redirect('orderslip', order=LastOrderSlip.order_id)
+
+def deleteOrderItem(request, order_item_id):
+    OrderItemToDelete = OrderItem.objects.filter(order_item_id=order_item_id).first()
+    try:
+        OrderSlipID = OrderItemToDelete.order.order_id
+        OrderItemToDelete.delete()
+        return redirect('orderslip', order=OrderSlipID)
+    except:
+        print("No Order Item found.")
+        return redirect('orderslip')
+    
+def deleteItemAddOn(request, item_addon_id):
+    ItemAddOnToDelete = ItemAddOn.objects.filter(item_addon_id=item_addon_id).first()
+    try:
+        OrderSlipID = ItemAddOnToDelete.order_item.order.order_id
+        ItemAddOnToDelete.delete()
+        return redirect('orderslip', order=OrderSlipID)
+    except:
+        print("No Item Add-On found.")
+        return redirect('orderslip')
