@@ -3,7 +3,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    # path('', views.index, name="order"),
+    path('', views.index, name="orderindex"),
     path('slip/',views.orderslip, name="orderslip"),
     path('slip/<int:order>',views.orderslip, name="orderslip"),
     path('slip/new/',views.neworderslip, name="neworderslip"),

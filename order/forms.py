@@ -9,9 +9,9 @@ class OrderSlipForm(forms.ModelForm):
 class OrderItemForm(forms.ModelForm):
     class Meta:
         model = OrderItem
-        exclude = ()
+        exclude = ('order',)
 
 class ItemAddOnForm(forms.ModelForm):
     class Meta:
         model = ItemAddOn
-        exclude = ()
+        exclude = ('order_item',)

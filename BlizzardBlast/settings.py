@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-y62un*1*3ap#+6y$dv0z4d=yq4x_y$7=z_jargdqi1_pbu8v!p
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.ngrok.io','https://blizzard.coralfriends.co/','blizzard.coralfriends.co']
 
 
 # Application definition
@@ -144,3 +144,9 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+## Added X Frame
+X_FRAME_OPTIONS = 'ALLOW-FROM https://blizzard.coralfriends.co/'
+
+CSRF_TRUSTED_ORIGINS = ['https://*.ngrok.io']

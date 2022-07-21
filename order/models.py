@@ -21,7 +21,7 @@ class Recipe(models.Model):
     recipe_id = models.AutoField(primary_key=True, editable=False)
     recipe_name = models.CharField(max_length=64)
     serving_size = models.IntegerField()
-    price = models.IntegerField()
+    price = models.DecimalField(max_digits=8,decimal_places=2)
 
     def __str__(self):
         return f"[R{self.recipe_id}] {self.recipe_name} ({self.serving_size}oz)"
@@ -48,7 +48,7 @@ class Ingredient(models.Model):
     ingredient_name = models.CharField(max_length=64)
     category = models.CharField(max_length=64)
     stock_quantity = models.IntegerField()
-    price_serving = models.IntegerField()
+    price_serving = models.DecimalField(max_digits=8,decimal_places=2)
 
     def __str__(self):
         return f"[I{self.ingredient_id}] {self.ingredient_name}"

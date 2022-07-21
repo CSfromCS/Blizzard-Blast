@@ -2,9 +2,13 @@
 
 {% block content %}
 
-<form method="post">
-    {% csrf_token %}
-    {{ form }}
-    <button type="submit">Submit</button>
-</form>
+<div id="form_wrapper">
+    <form method="post">
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+        </table>
+        <button id="submit_button" type="submit">Submit</button>
+    </form>
+</div>
 {% endblock %}

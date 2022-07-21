@@ -15,8 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from order import views as order_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', order_views.index, name="orderindex"),
     path('order/', include('order.urls'))
 ]

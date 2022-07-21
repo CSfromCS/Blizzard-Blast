@@ -1,55 +1,99 @@
 {% extends "base_template.html" %}
 
 {% block content %}
-  <h1>Order Slip</h1>
-  <p>Welcome to Blizzard Blast!, an internal database system developed by <em>Franco <3</em>!</p>
-  <h2>Dynamic content</h2>
+    <div id="back_button">< Back</div>
 
-  <h3>Order Slips</h3>
+    <div id="order_date">{{LastOrderSlip.date_ordered}}</div>
+    <div id="receipt_cashier">Cashier: Franco</div>
 
+    <h1 id="big_title">Order Slip</h1>
+    <h2 id="smaller_title">Milkshakes & Add-Ons</h2>
+    
     <!-- Order Slip Select Box -->
-    <select id="orderSearch" onchange="location.href=document.getElementById('orderSearch').value">
-        <option value="">---</option>
-        {% for os in OrderSlip %}
+    <div id="searchWrapper">
+        <select id="orderSearch" onchange="location.href=document.getElementById('orderSearch').value">
+            <option value="">---</option>
+            {% for os in OrderSlip %}
             {% if os == LastOrderSlip %}
             <option value="{{os.order_id}}" selected>{{os}}</option>
             {% else %}
             <option value="{{os.order_id}}">{{os}}</option>
             {% endif %}
-        {% endfor %}
-    </select>
+            {% endfor %}
+        </select>
+    </div>
 
-    <button type="button" onclick="location.href=document.getElementById('orderSearch').value">Search Order</button>
-    <button type="button" onclick="location.href='new/'">New Order Slip</button>
+    <div id="customer_box"></div>
+    <div id="customer_name">Customer Name: {{LastOrderSlip.customer_name}}</div>
+    <div id="order_id">OID: {{LastOrderSlip.order_id}}</div>
 
+    <!-- <button type="button" onclick="location.href=document.getElementById('orderSearch').value">Search Order</button> -->
+    
     <br><br>
 
     <!-- Order Slip Details -->
-    <b>{{LastOrderSlip.customer_name}} ({{LastOrderSlip.date_ordered}})</b> | ₱ {{LastOrderSlip.order_price}}<br>
-        Order ID: {{LastOrderSlip.order_id}}
-        <button type="button" onclick="location.href='../slip/delete/{{LastOrderSlip.order_id}}'">Delete Order Slip</button>
+    <!-- <b>{{LastOrderSlip.customer_name}} ({{LastOrderSlip.date_ordered}})</b> | ₱ {{LastOrderSlip.order_price}}<br>
+        Order ID: {{LastOrderSlip.order_id}} -->
         
-        <ol>
-            <!-- Each Order Item in the Order Slip-->
+        <!-- Each Order Item in the Order Slip-->
+        <div id="order_item">
             {% for oi in OrderItem %}
             {% if oi.order == LastOrderSlip %}
-            <li><b>{{oi.recipe.recipe_name}} ({{oi.recipe.serving_size}}oz)</b> | ₱{{oi.item_price}}
-            <button type="button" onclick="location.href='../item/delete/{{oi.order_item_id}}'">Delete Item</button>
-                
+                <div id="order_item_label">
+                    <!-- <b>{{oi.recipe.recipe_name}} ({{oi.recipe.serving_size}}oz)</b> | ₱{{oi.item_price}} -->
+                    <p id="order_recipe_label">
+                        {{oi.recipe.serving_size}} oz {{oi.recipe.recipe_name}}
+                    </p>
+                    
+                    <button id="order_item_delete" type="button" onclick="location.href='../item/delete/{{oi.order_item_id}}'">
+                        <img id="delete_icon" src="/static/images/delete-button.svg">
+                    </button>
+                    <p id="order_item_price">
+                        {{oi.recipe.price}}
+                    </p>
+                </div>
                 <!-- Each Item Add-On in the Order Item-->
                 {% for ia in ItemAddOn %}
                 {% if ia.order_item == oi %}
-                <br><i>{{ia.ingredient.ingredient_name}}: ₱{{ia.ingredient.price_serving}} x {{ia.add_on_quantity}} = ₱{% widthratio ia.ingredient.price_serving 1 ia.add_on_quantity %}</i>
-                <button type="button" onclick="location.href='../item/addon/delete/{{ia.item_addon_id}}'">Delete Add-On</button>
+                <div id="item_addon">
+                    <!-- <i>{{ia.ingredient.ingredient_name}}: ₱{{ia.ingredient.price_serving}} x {{ia.add_on_quantity}} = ₱{% widthratio ia.ingredient.price_serving 1 ia.add_on_quantity %}</i> -->
+                    
+                    <p id="item_addon_label">
+                        <i>{{ia.ingredient.ingredient_name}}  x {{ia.add_on_quantity}}</i>
+                    </p>   
+                    <button id="order_item_delete" type="button" onclick="location.href='../item/addon/delete/{{ia.item_addon_id}}'">
+                        <img id="delete_icon" src="/static/images/delete-button.svg">
+                    </button>
+                    <p id="item_addon_price">
+                        {% widthratio ia.ingredient.price_serving 1 ia.add_on_quantity %}
+                    </p>
+                </div>
                 {% endif %}
                 {% endfor %}
+                <hr id="total_bar">
+                <button id="add_addon_button" type="button" onclick="location.href='../item/addon/new/{{oi.order_item_id}}'"> Add Add-On</button>
 
-            <br>
-            <button type="button" onclick="location.href='../item/addon/new/{{oi.order_item_id}}'"> Add Add-On</button>
-            </li>
+                <p id="order_total_price"><u>PHP {{oi.item_price}}</u></p>
+                <br><br><br><br>
+
             {% endif %}
             {% endfor %}
-        </ol>
+
+            <button id="new_item_button" type="button" onclick="location.href='../item/new/{{LastOrderSlip.order_id}}'"> Add Item</button>
+        </div>
         
-    <button type="button" onclick="location.href='../item/new/{{LastOrderSlip.order_id}}'"> Add Item</button>
+
+
+  
+    <div id="footer">     
+        <button id="delete_order_slip_button" type="button" onclick="location.href='../slip/delete/{{LastOrderSlip.order_id}}'">    
+            <img id="delete_order_icon" src="/static/images/delete-button.svg">
+        </button>
+        <button id="new_order_button" type="button" onclick="location.href='new/'">New Order Slip</button>
+        <div id="order_total">Order Total: <u>₱{{LastOrderSlip.order_price}}</u></div>
+        <button id="print_button">Print Receipt</button>
+    </div>
+    <br><br><br><br>
+    <br><br><br><br>
+    <p></p>
 {% endblock %}

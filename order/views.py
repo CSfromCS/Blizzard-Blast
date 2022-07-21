@@ -7,8 +7,7 @@ from order.models import *
 
 # Create your views here.
 def index(request):
-    o = OrderSlip(customer_name="Anne")
-    return HttpResponse("Hello Blizzarder! You are in order.")
+    return redirect('orderslip')
 
 def orderslip(request, order=OrderSlip.objects.latest('order_id').order_id):
     context = {
